@@ -13,6 +13,7 @@
 
 // global variables
 let Bullets = [];
+let ship;
 let gameover = false;
 let x = 300;
 let y = 450;
@@ -24,13 +25,22 @@ let lastChanged = 0;
 let time = 2000;
 let spawn = true;
 let gotHit = false;
-let ship;
-
+let shipimage;
 function preload(){
-  ship = loadImage("assets/ship.png");
+  shipimage = loadImage("assets/ship.png");
 }
 
 //sets the class for bullet object with all its information
+class enemyShip {
+  constructor(shipSprite){
+    this.x = width/2;
+    this.y = 100;
+    this.sprite = shipSprite;
+  }
+  display(){
+    image(this.sprite,this.x,this.y,50,50);
+  }
+}
 class bullet {
   constructor (){
     this.x = random(20,width-20);
@@ -55,6 +65,7 @@ class bullet {
 function setup() {
   createCanvas(700,500);
   millis();
+  ship = new enemyShip(shipimage);
 }
 
 //draw loop where everything gets executed, will be cleaner in future versions
@@ -130,5 +141,5 @@ function spawnBullets(){
 //displays player and my shape
 function displayEntities() {
   rect(x,y,80,5);
-  image(ship,100,100);
+  ship.display();
 }
