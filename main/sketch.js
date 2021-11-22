@@ -40,6 +40,9 @@ class enemyShip {
   display(){
     image(this.sprite,this.x,this.y,50,50);
   }
+  move(){
+    this.x += 1;
+  }
 }
 class bullet {
   constructor (){
@@ -76,7 +79,7 @@ function draw() {
   console.log(spawn);
   console.log(lastChanged);
   console.log(millis());
-
+  ship.move();
   //if the player gets hit, removes all bullets off screen
   if (gotHit === true) {
     for (let die = 0; die < Bullets.length + 3; die++) {
@@ -132,8 +135,12 @@ function bulletSpawnHandler() {
 
 //adds bullets to the array so they exist
 function spawnBullets(){
-  for (let i = 0; i < 4; i ++) {
+  for (let i = 0; i < 1; i ++) {
     let Bullet = new bullet();
+    Bullet.x = ship.x;
+    push();
+    translate(ship.x,ship.y);
+    // start doing the bullet spray
     Bullets.push(Bullet);
   }
 }
