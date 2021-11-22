@@ -1,7 +1,7 @@
 # Major Project Proposal
 
 ## Discription
-recreating this from scratch: (add link at later date)
+recreating this from scratch: https://www.youtube.com/watch?v=paHiQl82X6Q
 
 ## Must have list
 
