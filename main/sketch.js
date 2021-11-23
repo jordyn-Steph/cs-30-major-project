@@ -33,26 +33,28 @@ function preload(){
 //sets the class for bullet object with all its information
 class enemyShip {
   constructor(shipSprite){
-    this.x = width/2;
-    this.y = 100;
+    this.x = 300;
+    this.y = 300;
     this.sprite = shipSprite;
   }
   display(){
     image(this.sprite,this.x,this.y,50,50);
   }
   move(){
-    this.x += 1;
+    this.x += 0;
   }
 }
 class bullet {
   constructor (){
-    this.x = random(20,width-20);
-    this.y = 100;
+    this.x = 0;
+    this.y = 0;
+    this.rotation = 0;
   }
   show(){
     stroke(255);
     noFill();
     rect(this.x,this.y,10,10);
+    rotate(this.rotation);
   }
   moveAndHitDet() {
     this.y += bulletSpeed;
@@ -67,6 +69,7 @@ class bullet {
 //draws the canvas (the size is meant to be limited)
 function setup() {
   createCanvas(700,500);
+  angleMode(DEGREES);
   millis();
   ship = new enemyShip(shipimage);
 }
@@ -76,9 +79,9 @@ function draw() {
   background (backgroundColor);
   displayEntities();
   handleKeys();
-  console.log(spawn);
-  console.log(lastChanged);
-  console.log(millis());
+  // console.log(spawn);
+  // console.log(lastChanged);
+  // console.log(millis());
   ship.move();
   //if the player gets hit, removes all bullets off screen
   if (gotHit === true) {
@@ -129,19 +132,25 @@ function bulletSpawnHandler() {
   if (millis() > lastChanged){
     lastChanged += 700 - bulletSpeed * 4;
     spawn = true;
-    console.log(lastChanged);
+    // console.log(lastChanged);
   }
 }
 
 //adds bullets to the array so they exist
 function spawnBullets(){
-  for (let i = 0; i < 1; i ++) {
+  for (let i = 0; i < 8; i ++) {
     let Bullet = new bullet();
-    Bullet.x = ship.x;
     push();
     translate(ship.x,ship.y);
+    console.log(ship.x,ship.y);
+    Bullet.x = ship.x;
+    Bullet.y = ship.y;
+    Bullet.rotation = 360/8 * i;
     // start doing the bullet spray
+    pop();
     Bullets.push(Bullet);
+    console.log(Bullet.x,Bullet.y);
+    console.log("bulletpushed");
   }
 }
 
