@@ -138,20 +138,21 @@ function bulletSpawnHandler() {
 
 //adds bullets to the array so they exist
 function spawnBullets(){
+  push();
+  translate(ship.x,ship.y);
   for (let i = 0; i < 8; i ++) {
     let Bullet = new bullet();
-    push();
-    translate(ship.x,ship.y);
     console.log(ship.x,ship.y);
+    translate(ship.x,ship.y);
+    Bullet.rotation = 360/8 * i; // dont do this anymore, use trig.
     Bullet.x = ship.x;
     Bullet.y = ship.y;
-    Bullet.rotation = 360/8 * i;
     // start doing the bullet spray
-    pop();
     Bullets.push(Bullet);
     console.log(Bullet.x,Bullet.y);
     console.log("bulletpushed");
   }
+  pop();
 }
 
 //displays player and my shape
