@@ -18,14 +18,15 @@ let gameover = false;
 let x = 300;
 let y = 450;
 let speed = 4;
-let bulletSpeed = 3;
+let bulletSpeed = 1;
 let backgroundColor = "black";
 let ball;
 let lastChanged = 0;
-let time = 2000;
+let time = 100;
 let spawn = true;
 let gotHit = false;
 let shipimage;
+let rotation = 0;
 function preload(){
   shipimage = loadImage("assets/ship.png");
 }
@@ -34,30 +35,37 @@ function preload(){
 class enemyShip {
   constructor(shipSprite){
     this.x = 300;
-    this.y = 300;
+    this.y = 100;
     this.sprite = shipSprite;
   }
   display(){
+    imageMode(CENTER);
     image(this.sprite,this.x,this.y,50,50);
   }
   move(){
     this.x += 0;
   }
 }
-class bullet {
-  constructor (){
+class Bullet {
+  constructor (dx,dy){
     this.x = 0;
     this.y = 0;
+    this.dx = dx;
+    this.dy - dy;
     this.rotation = 0;
   }
   show(){
     stroke(255);
     noFill();
+    push();
+    translate(this.x, this.y);
+    rotate(this.angle-90);  //figure out why this rotation thing isnt working
     rect(this.x,this.y,10,10);
-    rotate(this.rotation);
+    pop();
   }
   moveAndHitDet() {
-    this.y += bulletSpeed;
+    this.y += this.dy;
+    this.x += this.dx;
     let hit = collideRectRect(this.x,this.y,10,10,x,y,80,5);
     if (hit) {
       gotHit = true;
@@ -69,7 +77,6 @@ class bullet {
 //draws the canvas (the size is meant to be limited)
 function setup() {
   createCanvas(700,500);
-  angleMode(DEGREES);
   millis();
   ship = new enemyShip(shipimage);
 }
@@ -85,11 +92,11 @@ function draw() {
   ship.move();
   //if the player gets hit, removes all bullets off screen
   if (gotHit === true) {
-    for (let die = 0; die < Bullets.length + 3; die++) {
-      Bullets.pop();
-    }
+    // for (let die = 0; die < Bullets.length + 3; die++) {
+    // Bullets.pop();
+    //}
     gotHit = false;
-    bulletSpeed = 3;
+    bulletSpeed = 1;
   }
   bulletSpawnHandler();
 
@@ -126,11 +133,11 @@ function handleKeys() {
 function bulletSpawnHandler() {
   if (spawn === true) {
     spawnBullets();
-    bulletSpeed += 0.1;
+    rotation += 5;
     spawn = false;
   }
   if (millis() > lastChanged){
-    lastChanged += 700 - bulletSpeed * 4;
+    lastChanged += 100 - bulletSpeed * 4;
     spawn = true;
     // console.log(lastChanged);
   }
@@ -138,21 +145,19 @@ function bulletSpawnHandler() {
 
 //adds bullets to the array so they exist
 function spawnBullets(){
-  push();
-  translate(ship.x,ship.y);
   for (let i = 0; i < 8; i ++) {
-    let Bullet = new bullet();
-    console.log(ship.x,ship.y);
-    translate(ship.x,ship.y);
-    Bullet.rotation = 360/8 * i; // dont do this anymore, use trig.
-    Bullet.x = ship.x;
-    Bullet.y = ship.y;
+    let bullet = new Bullet();
+    angleMode(DEGREES);
+    bullet.rotation = 360/8 * i + rotation;
+    bullet.x = ship.x;
+    bullet.y = ship.y;
+    bullet.dx = cos(bullet.rotation) * bulletSpeed * 2;
+    bullet.dy = sin(bullet.rotation) * bulletSpeed * 2;
     // start doing the bullet spray
-    Bullets.push(Bullet);
-    console.log(Bullet.x,Bullet.y);
+    Bullets.push(bullet);
+    console.log(bullet.x,bullet.y);
     console.log("bulletpushed");
   }
-  pop();
 }
 
 //displays player and my shape
