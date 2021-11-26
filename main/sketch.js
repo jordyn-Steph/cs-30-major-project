@@ -1,15 +1,7 @@
 //jordyn
 //oct 5th 2021
 
-//interactive scene with base controls and shapes for the major project..
 
-//extra for experts is the shape, which is currently useless but
-//in future versions will be the thing dropping bullets
-//sometimes bullets overlap but that's not something i have time
-//to fix so for now its a nice way to give the player an easier time
-//to fix it all i would need is to add a variable to the random
-//function that changes on each spawn so that the bullets cant have
-//the same x cordinate
 
 // global variables
 let Bullets = [];
@@ -21,7 +13,7 @@ let speed = 4;
 let bulletSpeed = 1;
 let backgroundColor = "black";
 let ball;
-let lastChanged = 0;
+let lastChanged = 700;
 let time = 100;
 let spawn = true;
 let gotHit = false;
@@ -57,11 +49,11 @@ class Bullet {
   show(){
     stroke(255);
     noFill();
-    push();
-    translate(this.x, this.y);
-    rotate(this.angle-90);  //figure out why this rotation thing isnt working
+    // push();
+    // translate(this.x, this.y);
+    // rotate(this.angle-90);  //rotation isnt working, problem for another day
     rect(this.x,this.y,10,10);
-    pop();
+    // pop();
   }
   moveAndHitDet() {
     this.y += this.dy;
@@ -133,18 +125,28 @@ function handleKeys() {
 function bulletSpawnHandler() {
   if (spawn === true) {
     spawnBullets();
-    rotation += 5;
+    rotation += 60;
     spawn = false;
   }
-  if (millis() > lastChanged){
-    lastChanged += 100 - bulletSpeed * 4;
+  if (millis() > 1000){
+    //   spawnBullets();
     spawn = true;
-    // console.log(lastChanged);
   }
+  //if (millis() > lastChanged){
+  //   lastChanged += 100 - bulletSpeed * 4;
+  //   spawn = true;
+  // console.log(lastChanged);
+  //}
 }
 
 //adds bullets to the array so they exist
 function spawnBullets(){
+  bullet8blast();
+  if(millis() > 1000){
+    bulletshotgun3();
+  }
+}
+function bullet8blast(){
   for (let i = 0; i < 8; i ++) {
     let bullet = new Bullet();
     angleMode(DEGREES);
@@ -156,10 +158,24 @@ function spawnBullets(){
     // start doing the bullet spray
     Bullets.push(bullet);
     console.log(bullet.x,bullet.y);
-    console.log("bulletpushed");
   }
 }
-
+function bulletshotgun3(){
+  for (let i = 0; i < 3; i ++) {
+    let bullet = new Bullet();
+    angleMode(DEGREES);
+    rotation += 20;
+    bullet.rotation = 10/3 * i + rotation;
+    bullet.x = ship.x;
+    bullet.y = ship.y;
+    bullet.dx = cos(bullet.rotation) * bulletSpeed * 2;
+    bullet.dy = sin(bullet.rotation) * bulletSpeed * 2;
+    // start doing the bullet spray
+    Bullets.push(bullet);
+    console.log(bullet.x,bullet.y);
+    console.log("bulletpushed3");
+  }
+}
 //displays player and my shape
 function displayEntities() {
   rect(x,y,80,5);
