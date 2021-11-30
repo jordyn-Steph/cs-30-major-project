@@ -35,8 +35,8 @@ class enemyShip {
     imageMode(CENTER);
     image(this.sprite,this.x,this.y,50,50);
     for (let i = this.bulletArray.length-1; i > 0; i--) {
-      this.bulletArray[i].bulletUpdate();
       this.bulletArray[i].show();
+      this.bulletArray[i].bulletUpdate();
     }
   }
   move(){
@@ -52,7 +52,7 @@ class enemyShip {
       bullet.dx = cos(bullet.rotation) * this.bulletSpeed * 2;
       bullet.dy = sin(bullet.rotation) * this.bulletSpeed * 2;
       // start doing the bullet spray
-      this.bulletArray.push(this.bullet);
+      this.bulletArray.push(bullet);
       console.log(bullet.x,bullet.y);
     }
   }
@@ -91,11 +91,11 @@ class enemyShip {
   }
 }
 class Bullet {
-  constructor (dx,dy){
+  constructor (){
     this.x = 0;
     this.y = 0;
-    this.dx = dx;
-    this.dy - dy;
+    this.dx = 0;
+    this.dy = 0;
     this.rotation = 0;
   }
   show(){
@@ -125,6 +125,8 @@ function setup() {
   createCanvas(700,500);
   millis();
   ship = new enemyShip(shipimage);
+  let bullet = new Bullet();
+  ship.bulletArray.push(bullet);
 }
 
 //draw loop where everything gets executed, will be cleaner in future versions
