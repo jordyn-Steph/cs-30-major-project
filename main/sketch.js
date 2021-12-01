@@ -17,6 +17,9 @@ let spawn = true;
 let gotHit = false;
 let shipimage;
 let rotation = 0;
+let timelist = [100,200,300,400,500,600];
+let timevariable = 0;
+let nextTimeInList = timelist[timevariable];
 function preload(){
   shipimage = loadImage("assets/ship.png");
 }
@@ -24,7 +27,7 @@ function preload(){
 //sets the class for bullet object with all its information
 class enemyShip {
   constructor(shipSprite){
-    this.x = 300;
+    this.x = 50;
     this.y = 100;
     this.bulletArray = [];
     this.bulletSpeed = 1;
@@ -54,6 +57,7 @@ class enemyShip {
       // start doing the bullet spray
       this.bulletArray.push(bullet);
       console.log(bullet.x,bullet.y);
+      spawn = false;
     }
   }
   bulletshotgun3(){
@@ -70,23 +74,37 @@ class enemyShip {
       this.bulletArray.push(bullet);
       console.log(bullet.x,bullet.y);
       console.log("bulletpushed3");
+      spawn = false;
     }
   }
-  randomDropdown1(){
-
-
+  Dropdown1(){
+    let bullet = new Bullet();
+    bullet.x = ship.x;
+    bullet.y = ship.y;
+    bullet.dx = 0;
+    bullet.dy = 2;
+    bullet.rotation = 0;
+    spawn = false;
+    this.bulletArray.push(bullet);
   }
   spawnBullets(){
-    this.bullet8blast();
-    if(millis() > 1000){
-      this.bulletshotgun3();
-    }
   }
   bulletSpawnHandler() {
+    if (millis() === nextTimeInList){
+      spawn = true;
+   //   if(timevariable + 1 > timelist.length){
+        timevariable + 1;
+  //    }
+    }
     if (spawn === true) {
-      this.spawnBullets();
-      rotation += 60;
+      this.Dropdown1();
+      this.x += 50;
       spawn = false;
+    }
+    for (let i = this.bulletArray.length-1; i >= 0; i--){
+      if(!this.bulletArray[i].OnScreen()){
+        this.bulletArray.splice(i,1);
+      }
     }
   }
 }
@@ -114,6 +132,7 @@ class Bullet {
     if (hit) {
       gotHit = true;
     }
+
   }
   OnScreen() {
     return this.y <= height && this.y >= 0 && this.x <= width && this.x >= 0;
@@ -170,70 +189,7 @@ function handleKeys() {
     }
   }
 }
-
-//handles bullets being spawned at reasonable rates unless the player lasts a while
-// function bulletSpawnHandler() {
-//   if (spawn === true) {
-//     spawnBullets();
-//     rotation += 60;
-//     spawn = false;
-//   }
-//   if (millis() > 1000){
-//     //   spawnBullets();
-//     spawn = true;
-//   }
-//   if(millis() > 1008){
-//     spawn = false;
-//   }
-//   //if (millis() > lastChanged){
-//   //   lastChanged += 100 - bulletSpeed * 4;
-//   //   spawn = true;
-//   // console.log(lastChanged);
-//   //}
-// }
-
-//adds bullets to the array so they exist
-// function spawnBullets(){
-//   bullet8blast();
-//   if(millis() > 1000){
-//     bulletshotgun3();
-//   }
-// }
-// function bullet8blast(){
-//   for (let i = 0; i < 8; i ++) {
-//     let bullet = new Bullet();
-//     angleMode(DEGREES);
-//     bullet.rotation = 360/8 * i + rotation;
-//     bullet.x = ship.x;
-//     bullet.y = ship.y;
-//     bullet.dx = cos(bullet.rotation) * bulletSpeed * 2;
-//     bullet.dy = sin(bullet.rotation) * bulletSpeed * 2;
-//     // start doing the bullet spray
-//     Bullets.push(bullet);
-//     console.log(bullet.x,bullet.y);
-//   }
-// }
-// function bulletshotgun3(){
-//   for (let i = 0; i < 3; i ++) {
-//     let bullet = new Bullet();
-//     angleMode(DEGREES);
-//     rotation += 20;
-//     bullet.rotation = 10/3 * i + rotation;
-//     bullet.x = ship.x;
-//     bullet.y = ship.y;
-//     bullet.dx = cos(bullet.rotation) * bulletSpeed * 2;
-//     bullet.dy = sin(bullet.rotation) * bulletSpeed * 2;
-//     // start doing the bullet spray
-//     Bullets.push(bullet);
-//     console.log(bullet.x,bullet.y);
-//     console.log("bulletpushed3");
-//   }
-// }
-// function randomDropdown1(){
-//   ship.x = random(40,660);
-
-// }
-//displays player and my shape
+//displays player and ship
 function displayEntities() {
   rect(x,y,80,5);
   ship.display();
