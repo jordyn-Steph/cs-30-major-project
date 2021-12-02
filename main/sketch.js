@@ -20,6 +20,7 @@ let rotation = 0;
 let timelist = [100,200,300,400,500,600];
 let timevariable = 0;
 let nextTimeInList = timelist[timevariable];
+let canGoNext = true;
 function preload(){
   shipimage = loadImage("assets/ship.png");
 }
@@ -89,17 +90,24 @@ class enemyShip {
   }
   spawnBullets(){
   }
-  bulletSpawnHandler() {
-    if (millis() === nextTimeInList){
+  bulletSpawnHandler(){
+    console.log(canGoNext + "cangonext");
+    if (millis() > nextTimeInList && canGoNext === true){
       spawn = true;
-   //   if(timevariable + 1 > timelist.length){
+      canGoNext = false;
+      if(timevariable + 1 < timelist.length){
         timevariable + 1;
-  //    }
+        console.log(spawn);
+        canGoNext = false;
+      }
     }
+    console.log(spawn);
     if (spawn === true) {
       this.Dropdown1();
       this.x += 50;
       spawn = false;
+      console.log(spawn);
+      console.log(timevariable);
     }
     for (let i = this.bulletArray.length-1; i >= 0; i--){
       if(!this.bulletArray[i].OnScreen()){
@@ -188,6 +196,15 @@ function handleKeys() {
       x = 620;
     }
   }
+}
+function keyPressed(){
+  if(key === "f"){
+    noLoop();
+  }
+  if (key === "g"){
+    loop(); //find out whats going on with variables
+  }
+
 }
 //displays player and ship
 function displayEntities() {
