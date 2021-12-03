@@ -17,10 +17,12 @@ let spawn = true;
 let gotHit = false;
 let shipimage;
 let rotation = 0;
-let timelist = [100,200,300,400,500,600];
+let timelist = [100,250,300,450,500,600,1000];
+let movelist = [50,20,20,20,20,50,100];
 let timevariable = 0;
 let nextTimeInList = timelist[timevariable];
 let canGoNext = true;
+let startScreen = true;
 function preload(){
   shipimage = loadImage("assets/ship.png");
 }
@@ -93,18 +95,21 @@ class enemyShip {
   bulletSpawnHandler(){
     console.log(canGoNext + "cangonext");
     if (millis() > nextTimeInList && canGoNext === true){
-      spawn = true;
       canGoNext = false;
       if(timevariable + 1 < timelist.length){
-        timevariable + 1;
+        timevariable += 1;
+        spawn = true;
         console.log(spawn);
         canGoNext = false;
+      }
+      else{
+        timevariable + 1;
       }
     }
     console.log(spawn);
     if (spawn === true) {
       this.Dropdown1();
-      this.x += 50;
+      this.x += movelist[timevariable];
       spawn = false;
       console.log(spawn);
       console.log(timevariable);
@@ -161,6 +166,10 @@ function draw() {
   background (backgroundColor);
   displayEntities();
   handleKeys();
+  nextTimeInList = timelist[timevariable];
+  if(timevariable < timelist.length){
+    canGoNext = true;
+  }
   // console.log(spawn);
   // console.log(lastChanged);
   // console.log(millis());
