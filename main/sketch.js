@@ -10,12 +10,12 @@ let x = 300;
 let y = 450;
 let speed = 4;
 let backgroundColor = "black";
-let ball;
 let lastChanged = 700;
 let time = 100;
 let spawn = true;
 let gotHit = false;
 let shipimage;
+let music;
 let rotation = 0;
 let timelist = [100,250,300,450,500,600,1000];
 let movelist = [50,20,20,20,20,50,100];
@@ -25,6 +25,8 @@ let canGoNext = true;
 let startScreen = true;
 function preload(){
   shipimage = loadImage("assets/ship.png");
+  soundFormats("mp4");
+  music = loadSound("assets/spaceInvaders.mp4"); //convert the music into an mp4/3 file
 }
 
 //sets the class for bullet object with all its information
@@ -202,7 +204,7 @@ function handleKeys() {
   if (keyIsDown(68)) { //d
     x += speed;
     if (x > 620) {
-      x = 620;
+      x = 620; 
     }
   }
 }
