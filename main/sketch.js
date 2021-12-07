@@ -23,10 +23,11 @@ let timevariable = 0;
 let nextTimeInList = timelist[timevariable];
 let canGoNext = true;
 let startScreen = true;
+let play = false;
 function preload(){
   shipimage = loadImage("assets/ship.png");
-  soundFormats("mp4");
-  music = loadSound("assets/spaceInvaders.mp4"); //convert the music into an mp4/3 file
+  soundFormats("mp3");
+  music = loadSound("assets/spaceInvaders.mp3");
 }
 
 //sets the class for bullet object with all its information
@@ -96,7 +97,7 @@ class enemyShip {
   }
   bulletSpawnHandler(){
     console.log(canGoNext + "cangonext");
-    if (millis() > nextTimeInList && canGoNext === true){
+    if (time > nextTimeInList && canGoNext === true){
       canGoNext = false;
       if(timevariable + 1 < timelist.length){
         timevariable += 1;
@@ -161,30 +162,56 @@ function setup() {
   ship = new enemyShip(shipimage);
   let bullet = new Bullet();
   ship.bulletArray.push(bullet);
+  music.playMode("restart");
+  
 }
 
 //draw loop where everything gets executed, will be cleaner in future versions
 function draw() {
   background (backgroundColor);
-  displayEntities();
-  handleKeys();
-  nextTimeInList = timelist[timevariable];
-  if(timevariable < timelist.length){
-    canGoNext = true;
+  if(startScreen === true){
+    push();
+    stroke(100,100,100);
+    fill(0);
+    rect(270,270,150,100);
+    pop();
+    push();
+    fill(100,100,100);
+    textSize(50);
+    text("Space Invaders",170,150,600,600);
+    pop();
+    push();
+    fill(100,100,100);
+    text("dodge the beat",300,200,400,400);
+    text("start",330,315,400,400);
+    pop();
   }
-  // console.log(spawn);
-  // console.log(lastChanged);
-  // console.log(millis());
-  ship.move();
-  //if the player gets hit, removes all bullets off screen
-  if (gotHit === true) {
+  else{
+    if(play === false){
+      music.play();
+      play = true;
+    }
+    displayEntities();
+    handleKeys();
+    nextTimeInList = timelist[timevariable];
+    if(timevariable < timelist.length){
+      canGoNext = true;
+    }
+    time = millis();
+    // console.log(spawn);
+    // console.log(lastChanged);
+    // console.log(millis());
+    ship.move();
+    //if the player gets hit, removes all bullets off screen
+    if (gotHit === true) {
     // for (let die = 0; die < Bullets.length + 3; die++) {
     // Bullets.pop();
     //}
-    gotHit = false;
-    this.bulletSpeed = 1;
+      gotHit = false;
+      this.bulletSpeed = 1;
+    }
+    ship.bulletSpawnHandler();
   }
-  ship.bulletSpawnHandler();
 }
 
 //this is how the player being controlled is handled
@@ -206,6 +233,11 @@ function handleKeys() {
     if (x > 620) {
       x = 620; 
     }
+  }
+}
+function mousePressed(){
+  if (startScreen === true && mouseX < n && mouseY < n && mouseX > n && mouseY > n){//add numbers
+    startScreen = false;
   }
 }
 function keyPressed(){
