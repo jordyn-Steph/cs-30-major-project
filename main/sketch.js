@@ -12,18 +12,19 @@ let speed = 4;
 let backgroundColor = "black";
 let lastChanged = 700;
 let time = 100;
-let spawn = true;
+let spawn = false;
 let gotHit = false;
 let shipimage;
 let music;
 let rotation = 0;
-let timelist = [100,250,300,450,500,600,1000];
+let timelist = [2000,2250,2570,2650,2750,2850,3000]; //continue with the timings, the first two are right
 let movelist = [50,20,20,20,20,50,100];
 let timevariable = 0;
 let nextTimeInList = timelist[timevariable];
-let canGoNext = true;
+let canGoNext = false;
 let startScreen = true;
 let play = false;
+let offset;
 function preload(){
   shipimage = loadImage("assets/ship.png");
   soundFormats("mp3");
@@ -93,8 +94,6 @@ class enemyShip {
     spawn = false;
     this.bulletArray.push(bullet);
   }
-  spawnBullets(){
-  }
   bulletSpawnHandler(){
     console.log(canGoNext + "cangonext");
     if (time > nextTimeInList && canGoNext === true){
@@ -109,12 +108,11 @@ class enemyShip {
         timevariable + 1;
       }
     }
-    console.log(spawn);
+    console.log(spawn + " thing");
     if (spawn === true) {
       this.Dropdown1();
       this.x += movelist[timevariable];
       spawn = false;
-      console.log(spawn);
       console.log(timevariable);
     }
     for (let i = this.bulletArray.length-1; i >= 0; i--){
@@ -159,6 +157,7 @@ class Bullet {
 function setup() {
   createCanvas(700,500);
   millis();
+  // noLoop();
   ship = new enemyShip(shipimage);
   let bullet = new Bullet();
   ship.bulletArray.push(bullet);
@@ -185,6 +184,7 @@ function draw() {
     text("dodge the beat",300,200,400,400);
     text("start",330,315,400,400);
     pop();
+    offset = millis();
   }
   else{
     if(play === false){
@@ -197,7 +197,7 @@ function draw() {
     if(timevariable < timelist.length){
       canGoNext = true;
     }
-    time = millis();
+    time = millis() - offset;
     // console.log(spawn);
     // console.log(lastChanged);
     // console.log(millis());
@@ -236,7 +236,7 @@ function handleKeys() {
   }
 }
 function mousePressed(){
-  if (startScreen === true && mouseX < n && mouseY < n && mouseX > n && mouseY > n){//add numbers
+  if (startScreen === true && mouseX < 420 && mouseY < 370 && mouseX > 270 && mouseY > 270){//add numbers
     startScreen = false;
   }
 }
@@ -251,6 +251,6 @@ function keyPressed(){
 }
 //displays player and ship
 function displayEntities() {
-  rect(x,y,80,5);
+// rect(x,y,80,5);
   ship.display();
 }
