@@ -17,7 +17,7 @@ let gotHit = false;
 let shipimage;
 let music;
 let rotation = 0;
-let timelist = [2000,2250,2570,2650,2750,2850,3000]; //continue with the timings, the first two are right
+let timelist = [2000,2300,2670,2970,3070,3250,3900,4000,4200,4300,4400,1000000]; //continue with the timings, the first two are right
 let movelist = [50,20,20,20,20,50,100];
 let timevariable = 0;
 let nextTimeInList = timelist[timevariable];
@@ -101,7 +101,7 @@ class enemyShip {
       if(timevariable + 1 < timelist.length){
         timevariable += 1;
         spawn = true;
-        console.log(spawn);
+        console.log(timevariable);
         canGoNext = false;
       }
       else{
@@ -188,7 +188,7 @@ function draw() {
   }
   else{
     if(play === false){
-      music.play();
+      music.play(0,1,1,0);
       play = true;
     }
     displayEntities();
@@ -197,6 +197,7 @@ function draw() {
     if(timevariable < timelist.length){
       canGoNext = true;
     }
+    //time = millis()*0.5 - offset*0.5;
     time = millis() - offset;
     // console.log(spawn);
     // console.log(lastChanged);
