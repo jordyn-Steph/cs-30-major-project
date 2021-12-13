@@ -17,8 +17,8 @@ let gotHit = false;
 let shipimage;
 let music;
 let rotation = 0;
-let timelist = [2000,2300,2670,2970,3070,3250,3900,4000,4200,4300,4400,1000000]; //continue with the timings, the first two are right
-let movelist = [50,20,20,20,20,50,100];
+let timelist = [2000,2300,2670,2970,3070,3250,3900,4000,4200,4400,4600,1000000]; //continue with the timings, the first two are right
+let movelist = [50,70,90,110,130,180,280,300,340,400,500,440,420,400];
 let timevariable = 0;
 let nextTimeInList = timelist[timevariable];
 let canGoNext = false;
@@ -94,6 +94,13 @@ class enemyShip {
     spawn = false;
     this.bulletArray.push(bullet);
   }
+  moveShip(i){
+    let moveAmount = Math.abs(movelist[i] - movelist[i-1]);
+    console.log(moveAmount);
+    this.x += moveAmount/10;
+    
+
+  }
   bulletSpawnHandler(){
     console.log(canGoNext + "cangonext");
     if (time > nextTimeInList && canGoNext === true){
@@ -108,10 +115,14 @@ class enemyShip {
         timevariable + 1;
       }
     }
-    console.log(spawn + " thing");
+    console.log(spawn + " spawn");
     if (spawn === true) {
       this.Dropdown1();
-      this.x += movelist[timevariable];
+      for(let i = 0; i < 10;i++){
+        this.moveShip(timevariable);
+        this.display();//this doesnt work as intented, also moves bullets.
+      }
+      //this.x = movelist[timevariable];
       spawn = false;
       console.log(timevariable);
     }
