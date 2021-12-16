@@ -17,7 +17,7 @@ let gotHit = false;
 let shipimage;
 let music;
 let rotation = 0;
-let timelist = [2000,2300,2670,2970,3070,3250,3900,4200,4550,4700,4750,4800,5000,5100,5400,5500,5700,6000,6400,6600,6900,7000,7750,7900,8000,8200,8350,8400,8450,8500,8550,8650,8800,8900,1000000]; //continue with the timings, the first two are right
+let timelist = [2000,2300,2670,2970,3070,3250,3900,4200,4550,4700,4750,4800,5000,5100,5400,5500,5700,6000,6400,6600,7000,7100,7550,7700,8150,8320,8420,8470,8520,8570,8620,8870,8920,9020,1000000]; //continue with the timings, the last 12 arent right, by a small amount
 let movelist = [70,  160, 190, 240, 300, 350, 400, 440, 480, 500, 520, 540, 580, 600, 630, 650, 630, 600, 560, 530, 480, 430, 390, 340, 320, 300, 280, 260, 240, 220, 180, 140, 110, 70];
 let timevariable = 0;
 let nextTimeInList = timelist[timevariable];
@@ -206,7 +206,7 @@ function draw() {
   }
   else{
     if(play === false){
-      music.play(0,1,.2,0);
+      music.play(0,.5,.2,0);
       play = true;
     }
     displayEntities();
@@ -215,8 +215,8 @@ function draw() {
     if(timevariable < timelist.length){
       canGoNext = true;
     }
-    //time = millis()*0.5 - offset*0.5;    //change these to set playback speed for editing
-    time = millis() - offset;
+    time = millis()*0.5 - offset*0.5;    //change these to set playback speed for editing
+    //time = millis() - offset;
     // console.log(spawn);
     // console.log(lastChanged);
     // console.log(millis());
