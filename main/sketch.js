@@ -17,14 +17,15 @@ let gotHit = false;
 let shipimage;
 let music;
 let rotation = 0;
-let timelist = [2000,2300,2670,2970,3070,3250,3900,4000,4200,4400,4600,1000000]; //continue with the timings, the first two are right
-let movelist = [50,70,90,110,130,180,280,300,340,400,500,440,420,400];
+let timelist = [2000,2300,2670,2970,3070,3250,3900,4200,4550,4700,4750,4800,5000,5100,5400,5500,5700,6000,6400,6600,6900,7000,7750,7900,8000,8200,8350,8400,8450,8500,8550,8650,8800,8900,1000000]; //continue with the timings, the first two are right
+let movelist = [70,  160, 190, 240, 300, 350, 400, 440, 480, 500, 520, 540, 580, 600, 630, 650, 630, 600, 560, 530, 480, 430, 390, 340, 320, 300, 280, 260, 240, 220, 180, 140, 110, 70];
 let timevariable = 0;
 let nextTimeInList = timelist[timevariable];
 let canGoNext = false;
 let startScreen = true;
 let play = false;
 let offset;
+let movedown = true;
 function preload(){
   shipimage = loadImage("assets/ship.png");
   soundFormats("mp3");
@@ -51,6 +52,10 @@ class enemyShip {
   }
   move(){
     this.x += this.shipSpeed;
+    if(timevariable === 16 && movedown === true){
+      this.y += 50;
+      movedown = false;
+    }
   }
   bullet8blast(){
     for (let i = 0; i < 8; i ++) {
@@ -89,18 +94,20 @@ class enemyShip {
     bullet.x = ship.x;
     bullet.y = ship.y;
     bullet.dx = 0;
-    bullet.dy = 2;
+    bullet.dy = 10;
     bullet.rotation = 0;
     spawn = false;
     this.bulletArray.push(bullet);
   }
-  moveShip(i){
-    let moveAmount = Math.abs(movelist[i] - movelist[i-1]);
-    console.log(moveAmount);
-    this.x += moveAmount/10;
+  // moveShip(i){
+  //   let moveAmount = Math.abs(movelist[i] - movelist[i-1]);
+  //   imageMode(CENTER);
+  //   image(this.sprite,this.x,this.y,50,50);
+  //   console.log(moveAmount);
+  //   this.x += moveAmount/10;
     
 
-  }
+  // }
   bulletSpawnHandler(){
     console.log(canGoNext + "cangonext");
     if (time > nextTimeInList && canGoNext === true){
@@ -118,11 +125,11 @@ class enemyShip {
     console.log(spawn + " spawn");
     if (spawn === true) {
       this.Dropdown1();
-      for(let i = 0; i < 10;i++){
-        this.moveShip(timevariable);
-        this.display();//this doesnt work as intented, also moves bullets.
-      }
-      //this.x = movelist[timevariable];
+      // for(let i = 0; i < 10;i++){
+      //   this.moveShip(timevariable);
+      //   this.display();//this doesnt work as intented, also moves bullets.
+      // }
+      this.x = movelist[timevariable];
       spawn = false;
       console.log(timevariable);
     }
@@ -146,7 +153,7 @@ class Bullet {
     noFill();
     // push();
     // translate(this.x, this.y);
-    // rotate(this.angle-90);  //rotation isnt working, problem for another day
+    // rotate(this.angle-90);  //is this needed anymore?
     rect(this.x,this.y,10,10);
     // pop();
   }
@@ -199,7 +206,7 @@ function draw() {
   }
   else{
     if(play === false){
-      music.play(0,1,1,0);
+      music.play(0,1,.2,0);
       play = true;
     }
     displayEntities();
@@ -208,7 +215,7 @@ function draw() {
     if(timevariable < timelist.length){
       canGoNext = true;
     }
-    //time = millis()*0.5 - offset*0.5;
+    //time = millis()*0.5 - offset*0.5;    //change these to set playback speed for editing
     time = millis() - offset;
     // console.log(spawn);
     // console.log(lastChanged);
@@ -248,7 +255,7 @@ function handleKeys() {
   }
 }
 function mousePressed(){
-  if (startScreen === true && mouseX < 420 && mouseY < 370 && mouseX > 270 && mouseY > 270){//add numbers
+  if (startScreen === true && mouseX < 420 && mouseY < 370 && mouseX > 270 && mouseY > 270){
     startScreen = false;
   }
 }
@@ -257,7 +264,7 @@ function keyPressed(){
     noLoop();
   }
   if (key === "g"){
-    loop(); //find out whats going on with variables
+    loop(); 
   }
 
 }
