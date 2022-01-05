@@ -17,7 +17,7 @@ let gotHit = false;
 let shipimage;
 let music;
 let rotation = 0;
-let timelist = [2000,2300,2670,2970,3070,3250,3900,4200,4550,4700,4750,4800,5000,5100,5400,5500,5700,6000,6400,6800,7000,7200,7600,7800,8200,8400,8500,8550,8600,8650,8700,8750,9050,9150,9300,1000000]; //continue with the timings, the last 12 arent right, by a small amount
+let timelist = [2000,2300,2670,2970,3070,3250,3900,4200,4550,4700,4750,4800,5000,5100,5400,5500,5700,6000,6400,6700,6850,7050,7500,7650,8000,8300,8450,8500,8550,8600,8650,8700,8950,9080,9280,1000000]; // 7800 to 9150 //continue with the timings, the last 12 arent right, by a small amount
 let movelist = [70,  140, 190, 240, 300, 350, 400, 440, 480, 500, 520, 540, 580, 600, 630, 650, 630, 600, 560, 530, 480, 430, 410, 390, 340, 320, 300, 280, 260, 240, 220, 180, 140, 110, 70, 140, 190, 240, 300, 350, 400, 440, 480, 500, 520, 540, 580, 600, 630, 650, 630, 600, 560, 530, 480, 430, 390, 340, 320, 300, 280, 260, 240, 220, 180, 140, 110, 70];
 let timevariable = 0;
 let nextTimeInList = timelist[timevariable];
@@ -26,6 +26,7 @@ let startScreen = true;
 let play = false;
 let offset;
 let movedown = true;
+let stophere = false;
 function preload(){
   shipimage = loadImage("assets/ship.png");
   soundFormats("mp3");
@@ -52,9 +53,12 @@ class enemyShip {
   }
   move(){
     this.x += this.shipSpeed;
-    if(timevariable === 16 && movedown === true){
-      this.y += 50;
-      movedown = false;
+    console.log(movedown);
+    if(timevariable === 16 || timevariable === 35){
+      if(movedown === true){
+        this.y += 50;
+        movedown = false;
+      }
     }
   }
   bullet8blast(){
@@ -132,6 +136,7 @@ class enemyShip {
       this.x = movelist[timevariable];
       spawn = false;
       console.log(timevariable);
+      movedown === true;
     }
     for (let i = this.bulletArray.length-1; i >= 0; i--){
       if(!this.bulletArray[i].OnScreen()){
@@ -185,6 +190,9 @@ function setup() {
 
 //draw loop where everything gets executed, will be cleaner in future versions
 function draw() {
+  if( timevariable === 34){
+    stophere === true;
+  }
   background (backgroundColor);
   if(startScreen === true){
     push();
@@ -206,7 +214,7 @@ function draw() {
   }
   else{
     if(play === false){
-      music.play(0,.5,.2,0);
+      music.play(0,0.5,0.2,0);
       play = true;
     }
     displayEntities();
@@ -215,7 +223,7 @@ function draw() {
     if(timevariable < timelist.length){
       canGoNext = true;
     }
-    time = millis()*0.5 - offset*0.5;    //change these to set playback speed for editing
+    time = millis()*0.5 - offset*0.5;    //change this line and next to set playback speed for editing
     //time = millis() - offset;
     // console.log(spawn);
     // console.log(lastChanged);
