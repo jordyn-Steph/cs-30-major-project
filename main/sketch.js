@@ -5,6 +5,7 @@
 
 // global variables
 let ship;
+let ship2;
 let gameover = false;
 let x = 300;
 let y = 450;
@@ -18,17 +19,19 @@ let shipimage;
 let music;
 let rotation = 0;
 let timelist = [2000,2300,2670,2970,3070,3250,3900,4200,4550,4700,4750,4800,5000,5100,5400,5500,5700,6000,6400,6700,6850,7050,7500,7650,8000,8300,8450,8500,8550,8600,8650,8700,8950,9080,9280,
-            9500,9800,10000,10300,10400,10600,11200,11500,11850,12000,12050,12100,12350,12450,12750,12850,13080,13380,13550,13950,14050,14150,14250,14350,14450,14550,14950,15050,15350,15450,15700,15900,16100,16400,16550,16700, 11000000];//almost done, last 6 of the begginning are close to right, a bit slow.
+            9500,9800,10000,10300,10400,10600,11200,11500,11850,12000,12050,12100,12350,12450,12750,12850,13080,13380,13550,13950,14050,14150,14250,14350,14450,14550,14950,15050,15350,15450,15800,16100,16400,16650,16750, 11000000];//almost done, last 6 arent right except the last
 let movelist = [70,  140, 190, 240, 300, 350, 400, 440, 480, 500, 520, 540, 580, 600, 630, 650, 630, 600, 560, 530, 480, 430, 410, 390, 340, 320, 300, 280, 260, 240, 220, 180, 140, 110, 70, 140, 190, 240, 300, 350, 400, 440, 480, 500, 520, 540, 580, 600, 630, 650, 630, 600, 560, 530, 480, 430, 390, 340, 320, 300, 280, 260, 240, 220, 180, 150, 130, 110, 80, 60];
-let timevariable = 0;//                                                                                                                                                                                                          52 (13950)            
-let nextTimeVariable = 0;
-let nextTimeInList = timelist[timevariable];
-let canGoNext = false;
+let timelist2 = [1000,5000];
+let movelist2 = [100,300];
+//let timevariable = 0;//                                                                                                                                                                                                          52 (13950)            
+//let nextTimeVariable = 0;
+//let nextTimeInList = timelist[timevariable];
+//let canGoNext = false;
 let startScreen = true;
 let play = false;
 let offset;
-let moveDown = true;
-let hasWentDown = false;
+//let moveDown = true;
+//let hasWentDown = false;
 let stophere = false;
 function preload(){
   shipimage = loadImage("assets/ship.png");
@@ -38,12 +41,20 @@ function preload(){
 
 //sets the class for bullet object with all its information
 class enemyShip {
-  constructor(shipSprite){
+  constructor(shipSprite,dropList,xlist){
     this.x = 50;
     this.y = 100;
     this.bulletArray = [];
     this.bulletSpeed = 1;
     this.shipSpeed = 0;
+    this.timelist = dropList;
+    this.movelist = xlist;
+    this.timevariable = 0;
+    this.nextTimeVariable = 0;
+    this.nextTimeInList = this.timelist[this.timevariable];
+    this.canGoNext = false;
+    this.moveDown = true;
+    this.hasWentDown = false;
     this.sprite = shipSprite;
   }
   display(){
@@ -54,27 +65,27 @@ class enemyShip {
       this.bulletArray[i].bulletUpdate();
     }
   }
-  move(){
+  movingDown(){
     this.x += this.shipSpeed;
-    console.log(moveDown);
-    if(timevariable === nextTimeVariable){
-      console.log (nextTimeVariable);
-      nextTimeVariable += 1;
-      moveDown = true;
-      hasWentDown = false;
+    console.log(this.moveDown);
+    if(this.timevariable === this.nextTimeVariable){
+      console.log (this.nextTimeVariable);
+      this.nextTimeVariable += 1;
+      this.moveDown = true;
+      this.hasWentDown = false;
     }
-    console.log(timevariable);
-    console.log(nextTimeVariable);
-    if(timevariable === 16 || timevariable === 35){
-      console.log(moveDown);
-      if(moveDown === true && hasWentDown === false){
+    console.log(this.timevariable);
+    console.log(this.nextTimeVariable);
+    if(this.timevariable === 16 || this.timevariable === 35){
+      console.log(this.moveDown);
+      if(this.moveDown === true && this.hasWentDown === false){
         this.y += 50;
         console.log(this.y);
-        hasWentDown = true;
+        this.hasWentDown = true;
       }
     }
-    if(hasWentDown === true){
-      moveDown = false;
+    if(this.hasWentDown === true){
+      this.moveDown = false;
     }
   }
   bullet8blast(){
@@ -82,8 +93,8 @@ class enemyShip {
       let bullet = new Bullet();
       angleMode(DEGREES);
       bullet.rotation = 360/8 * i + rotation;
-      bullet.x = ship.x;
-      bullet.y = ship.y;
+      bullet.x = this.x;
+      bullet.y = this.y;
       bullet.dx = cos(bullet.rotation) * this.bulletSpeed * 2;
       bullet.dy = sin(bullet.rotation) * this.bulletSpeed * 2;
       // start doing the bullet spray
@@ -98,8 +109,8 @@ class enemyShip {
       angleMode(DEGREES);
       rotation += 20;
       bullet.rotation = 10/3 * i + rotation;
-      bullet.x = ship.x;
-      bullet.y = ship.y;
+      bullet.x = this.x;
+      bullet.y = this.y;
       bullet.dx = cos(bullet.rotation) * this.bulletSpeed * 2;
       bullet.dy = sin(bullet.rotation) * this.bulletSpeed * 2;
       // start doing the bullet spray
@@ -111,8 +122,8 @@ class enemyShip {
   }
   Dropdown1(){
     let bullet = new Bullet();
-    bullet.x = ship.x;
-    bullet.y = ship.y;
+    bullet.x = this.x;
+    bullet.y = this.y;
     bullet.dx = 0;
     bullet.dy = 10;
     bullet.rotation = 0;
@@ -128,17 +139,17 @@ class enemyShip {
     
 
   // }
-  bulletSpawnHandler(){
-    if (time > nextTimeInList && canGoNext === true){
-      canGoNext = false;
-      if(timevariable + 1 < timelist.length){
-        timevariable += 1;
+  moveAndBulletSpawnHandler(){
+    if (time > this.nextTimeInList && this.canGoNext === true){
+      this.canGoNext = false;
+      if(this.timevariable + 1 < this.timelist.length){
+        this.timevariable += 1;
         spawn = true;
-        console.log(timevariable);
-        canGoNext = false;
+        console.log(this.timevariable);
+        this.canGoNext = false;
       }
       else{
-        timevariable + 1;
+        this.timevariable + 1;
       }
     }
     console.log(spawn + " spawn");
@@ -148,9 +159,9 @@ class enemyShip {
       //   this.moveShip(timevariable);
       //   this.display();//this doesnt work as intented, also moves bullets.
       // }
-      this.x = movelist[timevariable];
+      this.x = this.movelist[this.timevariable];
       spawn = false;
-      console.log(timevariable);
+      console.log(this.timevariable);
     }
     for (let i = this.bulletArray.length-1; i >= 0; i--){
       if(!this.bulletArray[i].OnScreen()){
@@ -195,7 +206,8 @@ function setup() {
   createCanvas(700,500);
   millis();
   // noLoop();
-  ship = new enemyShip(shipimage);
+  ship = new enemyShip(shipimage,timelist,movelist);
+  ship2 = new enemyShip(shipimage,timelist2,movelist2);
   let bullet = new Bullet();
   ship.bulletArray.push(bullet);
   music.playMode("restart");
@@ -204,9 +216,6 @@ function setup() {
 
 //draw loop where everything gets executed, will be cleaner in future versions
 function draw() {
-  if( timevariable === 15){
-    stophere === true;
-  }
   background (backgroundColor);
   if(startScreen === true){
     push();
@@ -233,22 +242,22 @@ function draw() {
     }
     displayEntities();
     handleKeys();
-    nextTimeInList = timelist[timevariable];
-    if(timevariable < timelist.length){
-      canGoNext = true;
+    ship.nextTimeInList = ship.timelist[ship.timevariable];
+    if(ship.timevariable < ship.timelist.length){
+      ship.canGoNext = true;
     }
     time = millis()*0.5 - offset*0.5;    //change this line and next to set playback speed for editing
     //time = millis() - offset;
     // console.log(spawn);
     // console.log(lastChanged);
     // console.log(millis());
-    ship.move();
+    ship.movingDown();
     //if the player gets hit, removes all bullets off screen
     if (gotHit === true) {
       gotHit = false;
       this.bulletSpeed = 1;
     }
-    ship.bulletSpawnHandler();
+    ship.moveAndBulletSpawnHandler();
   }
 }
 
@@ -291,4 +300,5 @@ function keyPressed(){
 function displayEntities() {
 // rect(x,y,80,5);
   ship.display();
+//  ship2.display();
 }
