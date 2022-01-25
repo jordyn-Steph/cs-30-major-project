@@ -7,7 +7,7 @@
 let ship;
 let ship2;
 let gameover = false;
-let x = 300;
+let x = 350;
 let y = 450;
 let speed = 4;
 let backgroundColor = "black";
@@ -22,7 +22,7 @@ let timelist = [2000,2300,2670,2970,3070,3250,3900,4200,4550,4700,4750,4800,5000
   17000,17300,17700,17850,18000,18250,18350,18400,18450,18550,18600,18650,18750,18900,19200,19500,19550,19600,19650,19700,19850,20000,20250,20300,20500,20800,21000,21350,21450,21550,21650,21750,21850,21950,22050,22100,22150,22200,22250,22300,22350,22400,22450,22500,
   22650,22800,23000,23200,23300,23350,23400,23450,23500,23600,23900,24000,24300,24550,24850,25250,25450,25550,25850,26000,26050,26100,26200,26250,26300,26400,26600,27100,27200,27300,27400,27500,27600,27700,27750,27800,27850,27900,27950,28000,28050,28100,28300,28700,28800,28900,29000,29100,29200,29300,29400,29450,29500,29900,29950,30000,30100,30200,30400,30600,30700,30750,30800,30850,30900,31000,31200,31300,31500, 
   31800, 31850, 31900, 31950, 32000, 32050, 32100, 32150, 32200, 32250, 32300,32350,32400,32450,32500,32550,32600,32650,32700,32750,32800,32850,32900,32950,33000,33050,33100,33150,33200,33250,33300,33350,33400,33450,33500,33550,33600,33650,33700,33750,33800,33850,33900,33950,34000,34050,34100,34150,34200,34250,34300,34350,34400,34450,34500,34550,34600,34650,34700,34750,34800,34850,34900,34950,35200,35250,35300,35350,35400,35450,35500,35550,35600,
-  35650,35700,35750,35800,35850,35900,35950,36000,36050,36100,36150,37350,37400,37450,37500,37550,37600,37650,37700,37750,37800,37850,37900,37950,38000,38050,38100,38150,38200,38250,38300,38350,38600,38650,38700,38750,38800,38850,38900,38950,39000,39050,39100,39150,39200,39250,39300,39350,39400,39450,39500,39550,1101111100000];
+  35650,35700,35750,35800,35850,35900,35950,36000,36050,36100,36150,37350,37400,37450,37500,37550,37600,37650,37700,37750,37800,37850,37900,37950,38000,38050,38100,38150,38200,38250,38300,38350,38600,38650,38700,38750,38800,38850,38900,38950,39000,39050,39100,39150,39200,39250,39300,39350,39400,39450,39500,39550,11000000];
 let movelist = [70,  140, 190, 240, 300, 350, 400, 440, 480, 500, 520, 540, 580, 600, 630, 650, 630, 600, 560, 530, 480, 430, 410, 390, 340, 320, 300, 280, 260, 240, 220, 180, 140, 110, 70, 140, 190, 240, 300, 350, 400, 440, 480, 500, 520, 540, 580, 600, 630, 650, 630, 600, 560, 530, 480, 430, 390, 340, 320, 300, 280, 260, 240, 220, 180, 150, 130, 110, 80, 60,
   350,450,600,500,450,350,600,570,540,350,380,410,460,600,650,390,420,450,480,510,350,600,550,520,350,500,450,375,425,475,650,600,550,525,500,475,450,425,410,395,390,390,390,390
   ,600,450,500,600,580,550,350,380,400,430,550,520,480,380,450,650,600,550,350,650,600,650,370,420,380,350,500,370,400,430,460,490,460,650,620,590,560,560,590,620,650,350,400,600,570,530,450,400,420,350,400,430,600,560,540,350,370,550,500,380,410,440,470,500,650,600,350,370,400
@@ -46,6 +46,7 @@ let templist = [];
 //let moveDown = true;
 //let hasWentDown = false;
 let phase2 = false;
+let restart = false;
 function preload(){
   shipimage = loadImage("assets/ship.png");
   soundFormats("mp3");
@@ -185,10 +186,10 @@ class enemyShip {
       console.log(this.timevariable);
     }
     for (let i = this.bulletArray.length-1; i >= 0; i--){
-      if(!this.bulletArray[i].OnScreen()){
+      if(!this.bulletArray[i].OnScreen() || restart === true){
         this.bulletArray.splice(i,1);
       }
-      else if(this.bulletArray[i].x > x && this.bulletArray[i].y === y && this.bulletArray[i].x < x+30){
+      else if(this.bulletArray[i].x > x && this.bulletArray[i].y === y && this.bulletArray[i].x < x+50){
         this.bulletArray.splice(i,1);
         counter ++;
       }
@@ -200,17 +201,13 @@ class Bullet {
     this.x = 0;
     this.y = 0;
     this.dx = 0;
-    this.dy = 0;
+    this.dy = 1;
     this.rotation = 0;
   }
   show(){
     stroke(255);
     fill(255);
-    // push();
-    // translate(this.x, this.y);
-    // rotate(this.angle-90);  //is this needed anymore?
     rect(this.x,this.y,10,10);
-    // pop();
   }
   bulletUpdate() {
     this.y += this.dy;
@@ -281,6 +278,13 @@ function draw() {
       music.play(0,1,0.2,0);
       play = true;
     }
+    let hitcount = "times hit: " + counter;
+    push();
+    textSize(10);
+    stroke(100,100,100);
+    fill(100);
+    text(hitcount,600,50,700,50);
+    pop();
     displayEntities();
     handleKeys();
     ship.nextTimeInList = ship.timelist[ship.timevariable];
@@ -303,8 +307,16 @@ function draw() {
       gotHit = false;
       this.bulletSpeed = 1;
     }
+    console.log(restart);
     ship.moveAndBulletSpawnHandler();
     ship2.moveAndBulletSpawnHandler();
+    restart = false;
+    if(ship.nextTimeInList === 11000000){
+      ship.x = -100;
+      ship2.x = -100;
+      text("(the end)",height/2,width/2,450,450);
+      music.stop();
+    }
   }
 }
 
@@ -318,8 +330,8 @@ function handleKeys() {
   }
   if (keyIsDown(65)) { //a 
     x -= speed;
-    if (x < 0) {
-      x = 2;
+    if (x < 50) {
+      x = 50;
     }
   }
   if (keyIsDown(68)) { //d
@@ -348,6 +360,17 @@ function mousePressed(){
     startScreen = true;
     canchange = false;
   }
+  if(startScreen == false && canchange === true && mouseX < 700 && mouseY < 50 && mouseX > 648 && mouseY > 0){
+    offset += time;
+    ship.timevariable = 0;
+    ship2.timevariable = 0;
+    ship.x = movelist[0];
+    ship.y = 100;
+    ship2.x = movelist2[0];
+    counter = 0;
+    restart = true;
+    play = false;
+  }
 }
 function keyPressed(){
   if(key === "f"){
@@ -360,7 +383,26 @@ function keyPressed(){
 }
 //displays player and ship
 function displayEntities() {
-  rect(x,y,30,5);
+  push();
+  noStroke();
+  fill(50);
+  rect(50,y,610,5);
+  pop();
+  push();
+  noStroke();
+  fill(200);
+  rect(x,y,50,5);
+  pop();
+  push()
+  stroke(100)
+  fill(0);
+  rect(648,2,50,30);
+  pop();
+  push();
+  noStroke();
+  fill(100);
+  text("restart",655,10,700,50);
+  pop();
   ship.display();
   if(time > 16800){
     ship2.display();
